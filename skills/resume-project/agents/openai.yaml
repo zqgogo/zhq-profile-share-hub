@@ -1,0 +1,4 @@
+version: 1
+display_name: Profile Share Assistant
+short_description: Create or manage shareable profile pages and return public or manage links.
+default_prompt: Create or manage a resume, matchmaking, or friendship profile page, using a manage URL when the user wants to activate, deactivate, reset counts, or regenerate.
