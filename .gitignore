@@ -1,6 +1,11 @@
 node_modules
 .env
+.env.local
+.env.private
 data/profiles/*.json
 data/runtime/*
 profile-share-hub
 deploy/workers-proxy/.wrangler/
+local-private/
+secrets/
+private-config/
