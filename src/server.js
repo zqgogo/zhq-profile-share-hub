@@ -106,9 +106,7 @@ const server = createServer(async (req, res) => {
         ok: true,
         now: new Date().toISOString(),
         publicBaseUrl: config.publicBaseUrl,
-        aiEnabled: Boolean(config.aiApiUrl && config.aiApiKey && config.aiModel),
-        aiSource: config.aiSource,
-        aiModel: config.aiModel || ""
+        aiEnabled: Boolean(config.aiApiUrl && config.aiApiKey && config.aiModel)
       });
     }
 

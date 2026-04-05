@@ -39,7 +39,7 @@ try {
 
   console.log(JSON.stringify({
     public_url: data.links.publicUrl,
-    manage_url: data.links.manageUrl,
+    manage_url: maskManageUrl(data.links.manageUrl),
     type: data.type,
     title: data.title
   }, null, 2));
@@ -47,4 +47,18 @@ try {
   console.error(`Unable to reach profile publisher service at ${endpoint}. Start the app first with npm start or npm run dev.`);
   console.error(error.message);
   process.exit(1);
+}
+
+function maskManageUrl(url) {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    const token = parsed.searchParams.get("token") || "";
+    if (token) {
+      parsed.searchParams.set("token", `${token.slice(0, 4)}***`);
+    }
+    return parsed.toString();
+  } catch {
+    return "manage-url-hidden";
+  }
 }

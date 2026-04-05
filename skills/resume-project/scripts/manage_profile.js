@@ -56,7 +56,7 @@ try {
     type: response.type,
     title: response.title,
     public_url: response.links?.publicUrl,
-    manage_url: response.links?.manageUrl,
+    manage_url: maskManageUrl(response.links?.manageUrl),
     match_remaining: response.usage?.matchRemaining,
     chat_remaining: response.usage?.chatRemaining
   }, null, 2));
@@ -101,4 +101,18 @@ async function requestJson(url, body) {
 function numberOrDefault(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function maskManageUrl(url) {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    const token = parsed.searchParams.get("token") || "";
+    if (token) {
+      parsed.searchParams.set("token", `${token.slice(0, 4)}***`);
+    }
+    return parsed.toString();
+  } catch {
+    return "manage-url-hidden";
+  }
 }
