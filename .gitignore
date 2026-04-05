@@ -3,3 +3,4 @@ node_modules
 data/profiles/*.json
 data/runtime/*
 profile-share-hub
+deploy/workers-proxy/.wrangler/
