@@ -487,174 +487,7 @@ AI 模型接口地址。
 
 ### 9.2 临时外网演示
 
-你可以配合内网穿透工具使用，例如：
-
-- Cloudflare Tunnel
-- ngrok
-- 其他穿透服务
-
-只要把穿透后的地址写到 `PUBLIC_BASE_URL` 即可。
-
-例如：
-
-```bash
-PUBLIC_BASE_URL=https://你的临时公网域名 npm start
-```
-
-或：
-
-```bash
-./scripts/start_service.sh https://你的临时公网域名
-```
-
-说明：
-
-- 当前 `trycloudflare` 这种匿名隧道是临时的
-- 它不能保证几天都不变，更不适合正式分享
-
-### 9.2.1 几天内先稳定入口的折中方案
-
-如果你暂时还不买域名，也不上云，可以先用：
-
-- `Cloudflare Worker + workers.dev 固定入口`
-
-作用：
-
-- 对外访问地址固定
-- 底层仍然转发到当前临时隧道
-- 临时隧道变了时，只需要改 Worker 的上游地址，不需要重新发新链接
-
-项目里已经预留了模板：
-
-- [worker.js](./deploy/workers-proxy/worker.js)
-- [wrangler.example.toml](./deploy/workers-proxy/wrangler.example.toml)
-
-使用方式：
-
-1. 安装并登录 Wrangler
-
-```bash
-npm install -g wrangler
-wrangler login
-```
-
-2. 复制模板
-
-```bash
-cd ./deploy/workers-proxy
-cp wrangler.example.toml wrangler.toml
-```
-
-3. 把 `UPSTREAM_BASE_URL` 改成你当前临时隧道地址
-
-例如：
-
-```toml
-[vars]
-UPSTREAM_BASE_URL = "https://precious-genres-she-arthur.trycloudflare.com"
-```
-
-4. 发布
-
-```bash
-cd ./deploy/workers-proxy
-wrangler deploy
-```
-
-5. 发布后你会拿到一个固定的 `workers.dev` 地址
-
-例如：
-
-`https://profile-share-zqgogo.<你的 workers 子域>.workers.dev`
-
-注意：
-
-- 这个方案只是“固定入口”
-- 不等于底层完全稳定
-- 如果临时隧道失效，仍然需要把 Worker 上游地址更新到新的隧道
-- 但至少你发给别人的外部 URL 不用每次重换
-
-### 9.2.2 一键恢复固定入口
-
-如果固定的 `workers.dev` 地址打不开，通常是底层临时 tunnel 失效了。
-
-项目里已经补了恢复脚本：
-
-- [restore_fixed_entry.js](./skills/profile-share-assistant/scripts/restore_fixed_entry.js)
-
-它会自动：
-
-- 检查本地服务是否在线
-- 如有需要，拉起本地服务
-- 重建一个新的 quick tunnel
-- 更新 Worker 的 `UPSTREAM_BASE_URL`
-- 重新部署固定入口
-
-直接执行：
-
-```bash
-cd .
-node skills/profile-share-assistant/scripts/restore_fixed_entry.js
-```
-
-输出会包含：
-
-- `fixed_url`
-- `upstream_url`
-
-也可以通过 Claw 触发，推荐口令：
-
-- `恢复分享链接`
-- `重新恢复固定入口`
-- `让所有页面重新可以访问`
-
-### 9.3 稳定外网方案
-
-如果你要更稳定甚至长期固定地址，推荐两种方案：
-
-#### 方案 A：Cloudflare Named Tunnel
-
-优点：
-
-- 域名固定
-- 不需要暴露本地端口
-- 比临时隧道稳定得多
-
-已预留模板：
-
-[deploy/cloudflared/config.example.yml](./deploy/cloudflared/config.example.yml)
-
-你需要自己准备：
-
-- Cloudflare 账号
-- 自己的域名
-- 命名隧道凭证
-
-然后把 `PUBLIC_BASE_URL` 改成你的正式域名，例如：
-
-```env
-PUBLIC_BASE_URL=https://profile.your-domain.com
-```
-
-#### 方案 B：云服务器正式部署
-
-优点：
-
-- 最稳定
-- 最适合长期使用
-- 后续更容易加登录、备份、监控
-
-你需要准备：
-
-- 云服务器 IP
-- 域名
-- HTTPS 证书
-
-### 9.4 当前结论
-
-- 我可以帮你把“永久方案”配置好
-- 但真正变成永久固定地址，需要你自己的域名 / Cloudflare 账号 / 云服务器
-- 这一步不能只靠匿名临时隧道完成
+本项目已经切换为仅推荐 Render 免费部署，不再提供 Cloudflare tunnel / workers.dev 方案。
 
 ### 9.3 上云部署时建议
 
@@ -668,7 +501,7 @@ PUBLIC_BASE_URL=https://profile.your-domain.com
 
 如果后面你要正式上云，这个项目已经预留好了配置点，不需要大改结构。
 
-### 9.5 免费服务器（Render）快速部署
+### 9.4 免费服务器（Render）快速部署
 
 如果你想要一个真正“固定可访问”的免费地址（不依赖本地隧道在线），可以直接用 Render 免费 Web Service。
 
@@ -686,7 +519,7 @@ PUBLIC_BASE_URL=https://profile.your-domain.com
 说明：
 
 - Render 免费实例会在空闲一段时间后休眠，首次访问会慢几秒到几十秒
-- 但公开域名是固定的，不会像 `trycloudflare` 那样频繁变化
+- 公开域名是固定的，适合手机直接访问
 - 项目已支持自动读取 Render 的 `RENDER_EXTERNAL_URL`，通常不需要手动改 `BASE_URL`
 
 ---

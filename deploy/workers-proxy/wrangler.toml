@@ -1,7 +1,0 @@
-name = "profile-share"
-main = "worker.js"
-compatibility_date = "2026-04-05"
-workers_dev = true
-
-[vars]
-UPSTREAM_BASE_URL = "https://example-upstream.your-domain.com"

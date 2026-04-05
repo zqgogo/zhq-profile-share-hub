@@ -1,7 +1,0 @@
-name = "profile-share-zqgogo"
-main = "worker.js"
-compatibility_date = "2026-04-01"
-workers_dev = true
-
-[vars]
-UPSTREAM_BASE_URL = "https://your-temporary-tunnel.example.com"
